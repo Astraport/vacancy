@@ -239,10 +239,6 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Доска вакансий</h1>
-            <p>Актуальные предложения работы по различным категориям</p>
-        </header>
         
         <div class="accordion" id="vacancyAccordion">
             <div class="loader">
