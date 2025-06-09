@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккордеон вакансий</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+        
+        .accordion {
+            padding: 20px;
+        }
+        
+        .accordion-item {
+            border: 1px solid #e1e5eb;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background-color: #fff;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .accordion-item:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .accordion-header {
+            padding: 18px 20px;
+            background-color: #f8f9fc;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            transition: background-color 0.2s;
+        }
+        
+        .accordion-header:hover {
+            background-color: #edf1f7;
+        }
+        
+        .accordion-header::after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+        
+        .accordion-item.active .accordion-header::after {
+            transform: rotate(180deg);
+        }
+        
+        .vacancies-count {
+            background-color: #4a6491;
+            color: white;
+            border-radius: 12px;
+            padding: 3px 10px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .vacancy {
+            padding: 20px;
+            border-top: 1px solid #edf1f7;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .vacancy-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            text-decoration: none;
+        }
+        
+        .vacancy-title:hover {
+            color: #4a6491;
+            text-decoration: underline;
+        }
+        
+        .vacancy-company {
+            color: #4a6491;
+            font-weight: 500;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .vacancy-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: #5a6a85;
+        }
+        
+        .detail-item i {
+            margin-right: 8px;
+            color: #7d93b3;
+            font-size: 1rem;
+        }
+        
+        .salary {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .no-salary {
+            color: #e74c3c;
+        }
+        
+        .location {
+            display: flex;
+            align-items: center;
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 40px;
+            color: #5a6a85;
+        }
+        
+        .loader-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a6491;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+            text-align: center;
+            color: #c62828;
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(90deg, #2c3e50, #4a6491);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .vacancy-details {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .accordion-header {
+                padding: 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Доска вакансий</h1>
+            <p>Актуальные предложения работы по различным категориям</p>
+        </header>
+        
+        <div class="accordion" id="vacancyAccordion">
+            <div class="loader">
+                <div class="loader-spinner"></div>
+                <p>Загрузка данных о вакансиях...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionContainer = document.getElementById('vacancyAccordion');
+            
+            // Функция для загрузки данных из файла
+            async function loadVacancies() {
+                try {
+                    // Имитация задержки загрузки для демонстрации
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // В реальном проекте здесь будет fetch('data.txt')
+                    // Для демонстрации используем встроенные данные
+                    const response = await fetch('data.txt');
+                    const textData = await response.text();
+                    
+                    // Попробуем распарсить данные как JSON
+                    const data = JSON.parse(textData);
+                    
+                    renderAccordion(data);
+                } catch (error) {
+                    console.error('Ошибка загрузки данных:', error);
+                    showError('Не удалось загрузить данные о вакансиях. Пожалуйста, попробуйте позже.');
+                }
+            }
+            
+            // Функция для отображения ошибки
+            function showError(message) {
+                accordionContainer.innerHTML = `
+                    <div class="error">
+                        <p>${message}</p>
+                        <button class="refresh-btn" onclick="location.reload()">Обновить страницу</button>
+                    </div>
+                `;
+            }
+            
+            // Функция для рендеринга аккордеона
+            function renderAccordion(data) {
+                if (!data || !Array.isArray(data) || data.length === 0) {
+                    showError('Данные о вакансиях отсутствуют или имеют неверный формат.');
+                    return;
+                }
+                
+                accordionContainer.innerHTML = '';
+                
+                data.forEach(category => {
+                    const item = document.createElement('div');
+                    item.className = 'accordion-item';
+                    
+                    const vacanciesCount = category.vacancies ? category.vacancies.length : 0;
+                    
+                    item.innerHTML = `
+                        <div class="accordion-header">
+                            ${category.category}
+                            <span class="vacancies-count">${vacanciesCount}</span>
+                        </div>
+                        <div class="accordion-content">
+                            ${vacanciesCount > 0 ? 
+                                category.vacancies.map(vacancy => `
+                                    <div class="vacancy">
+                                        <a href="${vacancy.link || '#'}" class="vacancy-title" target="_blank">
+                                            ${vacancy.title}
+                                        </a>
+                                        <div class="vacancy-company">${vacancy.company}</div>
+                                        <div class="vacancy-details">
+                                            <div class="detail-item">
+                                                <i>📅</i> ${vacancy.date}
+                                            </div>
+                                            <div class="detail-item">
+                                                <i>💰</i> 
+                                                <span class="${vacancy.salary ? 'salary' : 'no-salary'}">
+                                                    ${vacancy.salary || 'з/п не указана'}
+                                                </span>
+                                            </div>
+                                            <div class="detail-item location">
+                                                <i>📍</i> ${vacancy.location}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('') 
+                                : 
+                                '<div class="vacancy"><p>Нет доступных вакансий в этой категории</p></div>'
+                            }
+                        </div>
+                    `;
+                    
+                    accordionContainer.appendChild(item);
+                    
+                    // Добавляем обработчик клика для заголовка
+                    const header = item.querySelector('.accordion-header');
+                    header.addEventListener('click', () => {
+                        item.classList.toggle('active');
+                        
+                        const content = item.querySelector('.accordion-content');
+                        if (item.classList.contains('active')) {
+                            content.style.maxHeight = content.scrollHeight + 'px';
+                        } else {
+                            content.style.maxHeight = null;
+                        }
+                    });
+                });
+            }
+            
+            // Загружаем вакансии при загрузке страницы
+            loadVacancies();
+        });
+    </script>
+</body>
+</html>

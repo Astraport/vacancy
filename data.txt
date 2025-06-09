@@ -1,0 +1,36 @@
+[
+  {
+    "category": "ЭММ-менеджер, контент-менеджер",
+    "vacancies": [
+      {
+        "title": "Менеджер по контенту",
+        "link": "https://example.com/vacancy1",
+        "company": "Цементум Центр",
+        "date": "15 мая",
+        "salary": "от 70 000 руб.",
+        "location": "Москва"
+      }
+    ]
+  },
+  {
+    "category": "Автослесарь, автомеханик",
+    "vacancies": [
+      {
+        "title": "Автослесарь",
+        "link": "https://example.com/vacancy2",
+        "company": "Автосервис 'Мотор'",
+        "date": "10 июня",
+        "salary": "",
+        "location": "Санкт-Петербург"
+      },
+      {
+        "title": "Автомеханик",
+        "link": "https://example.com/vacancy3",
+        "company": "Техноцентр",
+        "date": "8 июня",
+        "salary": "60 000 - 80 000 руб.",
+        "location": "Казань"
+      }
+    ]
+  }
+]
