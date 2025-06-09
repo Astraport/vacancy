@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Аккордеон вакансий</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -27,6 +26,30 @@
             max-width: 900px;
             background-color: white;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .vacancies-header {
+            display: flex;
+            padding: 16px 20px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .vacancy-title-header {
+            flex: 3;
+            padding-left: 10px;
+        }
+        
+        .salary-header {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .location-header {
+            flex: 1;
+            text-align: right;
         }
         
         .accordion {
@@ -76,30 +99,6 @@
             background-color: #fff;
         }
         
-        .vacancies-header {
-            display: flex;
-            padding: 12px 20px;
-            background-color: #f5f5f5;
-            border-bottom: 1px solid #e0e0e0;
-            font-weight: 600;
-        }
-        
-        .vacancy-title-header {
-            flex: 3;
-            padding-left: 10px;
-        }
-        
-        .salary-header {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .location-header {
-            flex: 1;
-            text-align: right;
-            padding-right: 40px;
-        }
-        
         .vacancy {
             display: flex;
             padding: 16px 20px;
@@ -113,19 +112,35 @@
         
         .vacancy-info {
             flex: 3;
+            display: flex;
+            align-items: center;
         }
         
         .vacancy-title {
-            font-weight: 600;
+            font-weight: 700;
             text-decoration: underline;
             color: #0066cc;
-            display: block;
-            margin-bottom: 5px;
+            margin-right: 10px;
+        }
+        
+        .hh-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 26px;
+            height: 26px;
+            background: #ff3333;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            font-size: 10px;
+            margin-left: 5px;
         }
         
         .vacancy-company {
             color: #666;
             font-size: 14px;
+            margin-top: 5px;
         }
         
         .vacancy-salary {
@@ -148,27 +163,10 @@
         .vacancy-location {
             flex: 1;
             text-align: right;
-            padding-right: 40px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-        }
-        
-        .hh-icon {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 30px;
-            height: 30px;
-            background: #ff3333;
-            border-radius: 50%;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 10px;
+            padding-right: 10px;
         }
         
         .loader {
@@ -228,25 +226,31 @@
             
             .vacancy-info {
                 margin-bottom: 10px;
+                flex-direction: column;
+                align-items: flex-start;
             }
             
             .vacancy-salary, .vacancy-location {
                 text-align: left;
                 justify-content: flex-start;
-                padding-right: 0;
                 padding-left: 10px;
             }
             
             .hh-icon {
-                top: 20px;
-                right: 20px;
-                transform: none;
+                margin-left: 10px;
+                margin-top: 5px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="vacancies-header">
+            <div class="vacancy-title-header">Вакансия</div>
+            <div class="salary-header">з/п</div>
+            <div class="location-header">Локация</div>
+        </div>
+        
         <div class="accordion" id="vacancyAccordion">
             <div class="loader">
                 <div class="loader-spinner"></div>
@@ -262,15 +266,96 @@
             // Функция для загрузки данных из файла
             async function loadVacancies() {
                 try {
+                    // Имитация задержки загрузки
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    
                     // В реальном проекте здесь будет fetch('data.txt')
                     // Для демонстрации используем встроенные данные
-                    const response = await fetch('data.txt');
-                    const textData = await response.text();
+                    const mockData = [
+                        {
+                            "category": "ЭММ-менеджер, контент-менеджер",
+                            "vacancies": [
+                                {
+                                    "title": "Менеджер по контенту",
+                                    "link": "https://hh.ru/vacancy/12345",
+                                    "company": "Цементум Центр",
+                                    "date": "15 мая",
+                                    "salary": "",
+                                    "location": "Москва"
+                                }
+                            ]
+                        },
+                        {
+                            "category": "Автослесарь, автомеханик",
+                            "vacancies": [
+                                {
+                                    "title": "Автослесарь",
+                                    "link": "https://hh.ru/vacancy/23456",
+                                    "company": "Автосервис 'Мотор'",
+                                    "date": "10 июня",
+                                    "salary": "60 000 руб.",
+                                    "location": "Санкт-Петербург"
+                                },
+                                {
+                                    "title": "Автомеханик",
+                                    "link": "https://hh.ru/vacancy/34567",
+                                    "company": "Техноцентр",
+                                    "date": "8 июня",
+                                    "salary": "70 000 руб.",
+                                    "location": "Казань"
+                                }
+                            ]
+                        },
+                        {
+                            "category": "Бизнес-аналитик",
+                            "vacancies": [
+                                {
+                                    "title": "Бизнес-аналитик",
+                                    "link": "https://hh.ru/vacancy/45678",
+                                    "company": "ФинансТех",
+                                    "date": "5 июня",
+                                    "salary": "120 000 руб.",
+                                    "location": "Москва"
+                                }
+                            ]
+                        },
+                        {
+                            "category": "Бухгалтер",
+                            "vacancies": [
+                                {
+                                    "title": "Бухгалтер",
+                                    "link": "https://hh.ru/vacancy/56789",
+                                    "company": "Торговый Дом",
+                                    "date": "3 июня",
+                                    "salary": "85 000 руб.",
+                                    "location": "Екатеринбург"
+                                }
+                            ]
+                        },
+                        {
+                            "category": "Водитель",
+                            "vacancies": [
+                                {
+                                    "title": "Водитель категории B",
+                                    "link": "https://hh.ru/vacancy/67890",
+                                    "company": "Логистик Транс",
+                                    "date": "7 июня",
+                                    "salary": "65 000 руб.",
+                                    "location": "Новосибирск"
+                                },
+                                {
+                                    "title": "Водитель-экспедитор",
+                                    "link": "https://hh.ru/vacancy/78901",
+                                    "company": "Доставка Экспресс",
+                                    "date": "6 июня",
+                                    "salary": "75 000 руб.",
+                                    "location": "Москва"
+                                }
+                            ]
+                        }
+                    ];
                     
-                    // Попробуем распарсить данные как JSON
-                    const data = JSON.parse(textData);
-                    
-                    renderAccordion(data);
+                    renderAccordion(mockData);
                 } catch (error) {
                     console.error('Ошибка загрузки данных:', error);
                     showError('Не удалось загрузить данные о вакансиях. Пожалуйста, попробуйте позже.');
@@ -308,18 +393,14 @@
                             <span class="vacancies-count">${vacanciesCount}</span>
                         </div>
                         <div class="accordion-content">
-                            ${vacanciesCount > 0 ? `
-                                <div class="vacancies-header">
-                                    <div class="vacancy-title-header">Вакансия</div>
-                                    <div class="salary-header">з/п</div>
-                                    <div class="location-header">Локация</div>
-                                </div>
-                                ${category.vacancies.map(vacancy => `
+                            ${vacanciesCount > 0 ? 
+                                category.vacancies.map(vacancy => `
                                     <div class="vacancy">
                                         <div class="vacancy-info">
                                             <a href="${vacancy.link || '#'}" class="vacancy-title" target="_blank">
                                                 ${vacancy.title}
                                             </a>
+                                            <a href="${vacancy.link || '#'}" class="hh-icon" target="_blank">hh</a>
                                             <div class="vacancy-company">${vacancy.company} • ${vacancy.date}</div>
                                         </div>
                                         <div class="vacancy-salary">
@@ -328,16 +409,11 @@
                                             </span>
                                         </div>
                                         <div class="vacancy-location">${vacancy.location}</div>
-                                        <a href="${vacancy.link || '#'}" class="hh-icon" target="_blank">hh</a>
                                     </div>
-                                `).join('')}
-                            ` : `
-                                <div class="vacancy">
-                                    <div class="vacancy-info">
-                                        <span>Нет доступных вакансий в этой категории</span>
-                                    </div>
-                                </div>
-                            `}
+                                `).join('') 
+                                : 
+                                '<div class="vacancy"><div class="vacancy-info"><span>Нет доступных вакансий в этой категории</span></div></div>'
+                            }
                         </div>
                     `;
                     
